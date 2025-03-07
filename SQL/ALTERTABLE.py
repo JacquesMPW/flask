@@ -1,0 +1,2 @@
+ALTER TABLE Student
+ADD DateStarted DATE NOT NULL
