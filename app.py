@@ -6,11 +6,6 @@ app = Flask(__name__)
 def signup():
     if request.method== "GET":
         return render_template("signup.html")
-    else:
-        f = open("login.txt", "w")
-        f.write(request.form["Username"] + "\n" )
-        f.write(request.form["Password"])
-        f.close()
     return "Signup succesful"
 
 @app.route("/", methods=["GET", "POST"])
@@ -20,10 +15,7 @@ def login():
     else:
         Username = request.form["Username"]
         Password = request.form["Password"]
-        f = open("login.txt", "r")
-        un = f.readline().strip()
-        pw = f.readline()
-        if  Password == pw and Username == un:
+        if  Password == "123" and Username == "bob":
             return "Hello " + Username
         else:
             return "Login Failed"
