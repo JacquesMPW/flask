@@ -23,6 +23,10 @@ con.close()
 def index():
     return render_template('login.html')
 
+@app.route("/index", methods=["GET"])
+def home():
+    return render_template('index.html')
+
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "GET":
@@ -61,6 +65,31 @@ def login():
             session["username"] = request.form["username"]
             return render_template('index.html')
 
+@app.route("/logout")
+def logout():
+    session.pop("username", None)
+    return render_template('login.html')
+
+@app.route("/password", methods=["GET", "POST"])
+def password():
+    if request.method == "GET":
+        if 'username' in session:
+            return render_template('password.html')
+        else:
+            return render_template('login.html')
+    else:
+        if 'username' in session:
+            con = sqlite3.connect(DATABASE)
+            cur = con.cursor()
+            hash = hashlib.sha256(request.form["password"].encode()).hexdigest()
+            print(hash)
+            cur.execute("UPDATE users SET password = ? WHERE username = ?", 
+                                (hash, session["username"]))
+            con.commit()
+            con.close()
+            return "Password updated"
+        else:
+            return render_template('login.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
